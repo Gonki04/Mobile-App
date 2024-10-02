@@ -2,137 +2,106 @@ package com.example.calculator
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.dp
+import com.example.calculator.ui.theme.Components.CalcButton
 import com.example.calculator.ui.theme.Pink40
 
 @Composable
 fun CalculatorApp(modifier: Modifier = Modifier) {
+
     var displayText by remember { mutableStateOf("0") }
-    var firstOperand by remember { mutableStateOf("") }
-    var secondOperand by remember { mutableStateOf("") }
-    var operator by remember { mutableStateOf<Char?>(null) }
-
-    Column(modifier = modifier) {
-        Text(text = displayText)
-        Row {
-            Button(onClick = { updateDisplay("7", displayText, { displayText = it })},
-                colors = ButtonDefaults.run { buttonColors(
-                Pink40) })
-            {
-                Text(text = "7")
-            }
-            Button(onClick = { updateDisplay("8", displayText, { displayText = it }) })
-            {
-                Text(text = "8")
-            }
-            Button(onClick = { updateDisplay("9", displayText, { displayText = it }) })
-            {
-                Text(text = "9")
-            }
-            Button(onClick = {
-                operator = 'x'
-                firstOperand = displayText
-                displayText = "0"
-            }) {
-                Text(text = "x")
-            }
-        }
-        Row {
-            Button(onClick = { updateDisplay("4", displayText, { displayText = it }) })
-            {
-                Text(text = "4")
-            }
-            Button(onClick = { updateDisplay("5", displayText, { displayText = it }) })
-            {
-                Text(text = "5")
-            }
-            Button(onClick = { updateDisplay("6", displayText, { displayText = it }) })
-            {
-                Text(text = "6")
-            }
-            Button(onClick = {
-                operator = '-'
-                firstOperand = displayText
-                displayText = "0"
-            }) {
-                Text(text = "-")
-            }
-        }
-        Row {
-            Button(onClick = { updateDisplay("1", displayText, { displayText = it }) })
-            {
-                Text(text = "1")
-            }
-            Button(onClick = { updateDisplay("2", displayText, { displayText = it }) })
-            {
-                Text(text = "2")
-            }
-            Button(onClick = { updateDisplay("3", displayText, { displayText = it }) })
-            {
-                Text(text = "3")
-            }
-            Button(onClick = {
-                operator = '+'
-                firstOperand = displayText
-                displayText = "0"
-            }) {
-                Text(text = "+")
-            }
-        }
-        Row {
-            Button(onClick = { }) {
-                Text(text = "+/-")
-            }
-            Button(onClick = { updateDisplay("0", displayText, { displayText = it }) })
-            {
-                Text(text = "0")
-            }
-            Button(onClick = { updateDisplay(".", displayText, { displayText = it }) })
-            {
-                Text(text = ",")
-            }
-            Button(onClick = {
-                secondOperand = displayText
-                displayText = calculateResult(firstOperand, secondOperand, operator)
-            }) {
-                Text(text = "=")
-            }
+    val onNumPressed: (String) -> Unit = { num ->
+        if (displayText == "0") {
+            displayText = num
+        } else {
+            displayText += num
         }
     }
-}
-
-fun updateDisplay(value: String, currentDisplay: String, update: (String) -> Unit)
-{
-    if (currentDisplay == "0") {
-        update(value)
-    } else {
-        update(currentDisplay + value)
-    }
-}
-
-fun calculateResult(first: String, second: String, operator: Char?): String
-{
-    val firstNum = first.toDoubleOrNull() ?: 0.0
-    val secondNum = second.toDoubleOrNull() ?: 0.0
-
-    return when (operator) {
-        '+' -> (firstNum + secondNum).toString()
-        '-' -> (firstNum - secondNum).toString()
-        'x' -> (firstNum * secondNum).toString()
-        else -> "0"
+    Column(modifier = modifier)
+        {
+        Text(
+            modifier = Modifier
+                .fillMaxSize()
+                .weight(1f),
+            text = displayText,
+            style = MaterialTheme.typography.bodyLarge,
+            textAlign = TextAlign.Right)
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(4f)
+        ) {
+            CalcButton(modifier = Modifier.weight(1f), label = "7", onClick = onNumPressed)
+            CalcButton(modifier = Modifier.weight(1f), label = "8", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "9", onClick =  onNumPressed )
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "x",
+                isOperation = true,
+                onClick = {})
+        }
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(4f)
+        ) {
+            CalcButton(modifier = Modifier.weight(1f), label = "4", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "5", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "6", onClick =  onNumPressed )
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "-",
+                isOperation = true,
+                onClick = {})
+        }
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(4f)
+        ) {
+            CalcButton(modifier = Modifier.weight(1f), label = "1", onClick =  onNumPressed)
+            CalcButton(modifier = Modifier.weight(1f), label = "2", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "3", onClick =  onNumPressed )
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "+",
+                isOperation = true,
+                onClick = {})
+        }
+        Row(
+            modifier = Modifier
+                .weight(1f)
+                .aspectRatio(4f)
+        ) {
+            CalcButton(modifier = Modifier.weight(1f), label = "/", isOperation = true, onClick = {})
+            CalcButton(modifier = Modifier.weight(1f), label = ".", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "0", onClick =  onNumPressed )
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "=",
+                isOperation = true,
+                onClick = {})
+        }
     }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun CalcScreenPreview()
-{
+fun CalcScreenPreview() {
     CalculatorApp()
 }
