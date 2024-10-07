@@ -35,9 +35,9 @@ fun CalcButton(
             .aspectRatio(1f)
             .padding(4.dp),
         colors = if (isOperation)
-            ButtonDefaults.run { buttonColors(Pink40) }
+            ButtonDefaults.run { buttonColors(Color.Yellow) }
         else
-            ButtonDefaults.run { buttonColors(PurpleGrey40) },
+            ButtonDefaults.run { buttonColors(Color.DarkGray) },
         onClick = {
             onClick(label)
         }) {

@@ -1,5 +1,6 @@
 package com.example.calculator
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -32,18 +33,36 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
             displayText += num
         }
     }
-    Column(modifier = modifier)
-        {
+    val onACPressed: (String) -> Unit = {
+        displayText = "0"
+    }
+    Column(modifier = modifier.background(Color.Gray))
+    {
         Text(
             modifier = Modifier
                 .fillMaxSize()
-                .weight(1f),
+                .weight(1f)
+                .background(Color.Gray),
             text = displayText,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Right)
         Row(
             modifier = Modifier
-                .weight(1f)
+                .weight(0.5f)
+                .aspectRatio(4f)
+        ) {
+            CalcButton(modifier = Modifier.weight(1f), label = "AC", onClick = onACPressed)
+            CalcButton(modifier = Modifier.weight(1f), label = "+/-", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "%", onClick =  onNumPressed )
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "/",
+                isOperation = true,
+                onClick = {})
+        }
+        Row(
+            modifier = Modifier
+                .weight(0.5f)
                 .aspectRatio(4f)
         ) {
             CalcButton(modifier = Modifier.weight(1f), label = "7", onClick = onNumPressed)
@@ -57,7 +76,7 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
         }
         Row(
             modifier = Modifier
-                .weight(1f)
+                .weight(0.5f)
                 .aspectRatio(4f)
         ) {
             CalcButton(modifier = Modifier.weight(1f), label = "4", onClick =  onNumPressed )
@@ -71,7 +90,7 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
         }
         Row(
             modifier = Modifier
-                .weight(1f)
+                .weight(0.5f)
                 .aspectRatio(4f)
         ) {
             CalcButton(modifier = Modifier.weight(1f), label = "1", onClick =  onNumPressed)
@@ -85,12 +104,12 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
         }
         Row(
             modifier = Modifier
-                .weight(1f)
+                .weight(0.5f)
                 .aspectRatio(4f)
         ) {
-            CalcButton(modifier = Modifier.weight(1f), label = "/", isOperation = true, onClick = {})
-            CalcButton(modifier = Modifier.weight(1f), label = ".", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = "", isOperation = true, onClick = {})
             CalcButton(modifier = Modifier.weight(1f), label = "0", onClick =  onNumPressed )
+            CalcButton(modifier = Modifier.weight(1f), label = ",", onClick =  onNumPressed )
             CalcButton(
                 modifier = Modifier.weight(1f),
                 label = "=",
@@ -98,6 +117,11 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
                 onClick = {})
         }
     }
+}
+
+@Composable
+fun AddButton(modifier: Modifier = Modifier) {
+
 }
 
 @Preview(showBackground = true)
