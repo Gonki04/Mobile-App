@@ -68,6 +68,9 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
 
     val onACPressed: (String) -> Unit = {
         displayText = "0"
+        operator = ""
+        operand = 0.0
+        userIsInTheMiddleOfIntroducing = true
     }
 
     val onOpPressed: (String) -> Unit = { op ->
