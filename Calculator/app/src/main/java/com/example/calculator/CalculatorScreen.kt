@@ -7,12 +7,14 @@ import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
@@ -20,6 +22,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.calculator.ui.theme.Components.CalcButton
 import com.example.calculator.ui.theme.Pink40
 
@@ -27,57 +30,60 @@ import com.example.calculator.ui.theme.Pink40
 fun CalculatorApp(modifier: Modifier = Modifier) {
 
     var displayText by remember { mutableStateOf("0") }
-    var num1 by remember { mutableStateOf("") }
-    var num2 by remember { mutableStateOf("") }
-    var operation by remember { mutableStateOf<Char?>(null) }
-    var result by remember { mutableStateOf("") }
+    var operator by remember { mutableStateOf("") }
+    var operand by remember { mutableStateOf(0.0) }
 
-    val onNumPressed: (String) -> Unit = { num ->
-        if (displayText == "0") {
-            displayText = num
+    fun setDisplay(value: Double) {
+        if (value % 1 == 0.0) {
+            displayText = value.toInt().toString()
         } else {
-            displayText += num
+            displayText = value.toString()
         }
     }
+
+    var userIsInTheMiddleOfIntroducing by remember { mutableStateOf(true) }
+
+    val onNumPressed: (String) -> Unit = { num ->
+        if (userIsInTheMiddleOfIntroducing) {
+            if (displayText == "0") {
+                if (num == ".") {
+                    displayText = "0."
+                } else {
+                    displayText = num
+                }
+            } else {
+                if (num == ".") { //Verifica se a tecla pressionada é a do ponto
+                    if (!displayText.contains('.')) { //Verifica se já existe um ponte
+                        displayText += num
+                    }
+                } else {
+                    displayText += num
+                }
+            }
+        } else {
+            displayText = num
+        }
+        userIsInTheMiddleOfIntroducing = true
+    }
+
     val onACPressed: (String) -> Unit = {
         displayText = "0"
     }
-    val onPlusPressed: () -> Unit = {
-        num1 = displayText
-        displayText = "0"
-        operation = '+'
-    }
-    val onMinusPressed: () -> Unit = {
-        num1 = displayText
-        displayText = "0"
-        operation = '-'
-    }
-    val onMultPressed: () -> Unit = {
-        num1 = displayText
-        displayText = "0"
-        operation = '*'
-    }
-    val onDivPressed: () -> Unit = {
-        num1 = displayText
-        displayText = "0"
-        operation = '/'
-    }
-    val onEqualPressed: () -> Unit = {
-        if (operation != null && num1.isNotEmpty()) {
-            num2 = displayText
-            val resultValue = when (operation) {
-                '+' -> num1.toInt() + num2.toInt()
-                '-' -> num1.toInt() - num2.toInt()
-                '*' -> num1.toInt() * num2.toInt()
-                '/' -> num1.toInt() / num2.toInt()
-                else -> 0
+
+    val onOpPressed: (String) -> Unit = { op ->
+        if (operator.isNotEmpty()) {
+            when (operator) {
+                "+" -> operand += displayText.toDouble()
+                "-" -> operand -= displayText.toDouble()
+                "x" -> operand *= displayText.toDouble()
+                "/" -> operand /= displayText.toDouble()
+                "=" -> operator = ""
             }
-            result = resultValue.toString()
-            displayText = result
-            num1 = ""
-            num2 = ""
-            operation = null
+            setDisplay(operand)
         }
+        operand = displayText.toDouble()
+        operator = op
+        userIsInTheMiddleOfIntroducing = false
     }
 
     Column(modifier = modifier.background(Color.Gray))
@@ -86,8 +92,10 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
             modifier = Modifier
                 .fillMaxSize()
                 .weight(1f)
-                .background(Color.Gray),
+                .background(Color.Gray)
+                .wrapContentHeight(align = Alignment.CenterVertically),
             text = displayText,
+            fontSize = 50.sp,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Right
         )
@@ -103,7 +111,8 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f),
                 label = "/",
                 isOperation = true,
-                onClick = {onDivPressed()})
+                onClick = onOpPressed
+            )
         }
         Row(
             modifier = Modifier
@@ -117,7 +126,8 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f),
                 label = "x",
                 isOperation = true,
-                onClick = {onMultPressed()})
+                onClick = onOpPressed
+            )
         }
         Row(
             modifier = Modifier
@@ -131,7 +141,8 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f),
                 label = "-",
                 isOperation = true,
-                onClick = { onMinusPressed() })
+                onClick = onOpPressed
+            )
         }
         Row(
             modifier = Modifier
@@ -145,21 +156,27 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
                 modifier = Modifier.weight(1f),
                 label = "+",
                 isOperation = true,
-                onClick = { onPlusPressed() })
+                onClick = onOpPressed
+            )
         }
         Row(
             modifier = Modifier
                 .weight(0.5f)
                 .aspectRatio(4f)
         ) {
-            CalcButton(modifier = Modifier.weight(1f), label = "", isOperation = true, onClick = {})
+            CalcButton(
+                modifier = Modifier.weight(1f),
+                label = "",
+                isOperation = true,
+                onClick = {})
             CalcButton(modifier = Modifier.weight(1f), label = "0", onClick = onNumPressed)
-            CalcButton(modifier = Modifier.weight(1f), label = ",", onClick = onNumPressed)
+            CalcButton(modifier = Modifier.weight(1f), label = ".", onClick = onNumPressed)
             CalcButton(
                 modifier = Modifier.weight(1f),
                 label = "=",
                 isOperation = true,
-                onClick = { onEqualPressed() })
+                onClick = onOpPressed
+            )
         }
     }
 }
