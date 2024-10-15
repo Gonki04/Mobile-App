@@ -13,10 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.example.topnews.Models.Article
 import com.example.topnews.R
+import com.example.topnews.theme.TopNewsTheme
 
 @Composable
 fun RowArticle(modifier: Modifier = Modifier, article: Article) {
@@ -30,14 +33,14 @@ fun RowArticle(modifier: Modifier = Modifier, article: Article) {
                 model = it,
                 contentDescription = "image article",
                 modifier = Modifier
-                    .height(60.dp)
-                    .width(60.dp)
+                    .height(100.dp)
+                    .width(90.dp)
             )
         } ?: run {
             Image(
                 modifier = Modifier
-                    .height(60.dp)
-                    .width(60.dp),
+                    .height(100.dp)
+                    .width(90.dp),
                 painter = painterResource(id = R.mipmap.images),
                 contentDescription = "image article"
             )
@@ -47,9 +50,25 @@ fun RowArticle(modifier: Modifier = Modifier, article: Article) {
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Text(text = article.title!!, style = MaterialTheme.typography.titleMedium)
-            Text(text = article.description!!, style = MaterialTheme.typography.bodyMedium)
-            Text(text = "Date", style = MaterialTheme.typography.bodySmall)
+            Text(text = article.title!!, fontSize = 20.sp ,style = MaterialTheme.typography.titleMedium)
+            Text(text = article.description!!, fontSize = 16.sp ,style = MaterialTheme.typography.bodyMedium)
+            Text(text = article.publishedAt.toString(), style = MaterialTheme.typography.bodySmall)
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+fun RowArticlePreview() {
+    TopNewsTheme {
+        RowArticle(
+            article = Article(
+                "dsflsdlfk selkfwçlfmkqw",
+                "Description",
+                null,
+                "url",
+                java.util.Date()
+            )
+        )
     }
 }
