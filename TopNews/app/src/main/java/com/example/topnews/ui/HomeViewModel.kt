@@ -24,7 +24,7 @@ class HomeViewModel: ViewModel() {
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=1765f87e4ebc40229e80fd0f75b6416c")
+            .url("https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=d1f150e77bb041b7b7076fa26475260d")
             .build()
 
         client.newCall(request).enqueue(object : Callback {

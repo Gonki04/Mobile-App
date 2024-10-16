@@ -71,8 +71,6 @@ fun HomeViewContent(modifier: Modifier = Modifier,
             }
         }
     }
-
-
 }
 
 @Preview(showBackground = true)
