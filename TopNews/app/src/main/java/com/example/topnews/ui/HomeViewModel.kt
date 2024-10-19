@@ -15,31 +15,37 @@ import okhttp3.Response
 import org.json.JSONObject
 import java.io.IOException
 
-data class ArticlesState(
-    val articles : ArrayList<Article> = arrayListOf(),
-    val isLoading : Boolean = false,
-    val error : String? = null
+data class ArticlesState (
+    val articles: ArrayList<Article> = arrayListOf(),
+    val isLoading: Boolean = false,
+    val error: String? = null
 )
 
-class HomeViewModel: ViewModel() {
+class HomeViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(ArticlesState())
     val uiState : StateFlow<ArticlesState> = _uiState.asStateFlow()
 
     fun fetchArticles() {
-        _uiState.value = ArticlesState(isLoading = true, error = null)
+
+        _uiState.value = ArticlesState(
+            isLoading = true,
+            error = null)
 
         val client = OkHttpClient()
 
         val request = Request.Builder()
-            .url("https://newsapi.org/v2/top-headlines?country=us&category=business&apiKey=d1f150e77bb041b7b7076fa26475260d")
+            .url("https://newsapi.org/v2/top-headlines?country=us&apiKey=1765f87e4ebc40229e80fd0f75b6416c")
             .build()
 
         client.newCall(request).enqueue(object : Callback {
             override fun onFailure(call: Call, e: IOException) {
                 e.printStackTrace()
-                _uiState.value = ArticlesState(isLoading = true, error = null)
+                _uiState.value = ArticlesState(
+                    isLoading = true,
+                    error = e.message)
             }
+
             override fun onResponse(call: Call, response: Response) {
                 response.use {
                     if (!response.isSuccessful) throw IOException("Unexpected code $response")
@@ -55,9 +61,13 @@ class HomeViewModel: ViewModel() {
                             articlesResult.add(article)
                         }
                     }
-                    _uiState.value = ArticlesState(articles = articlesResult, isLoading = true, error = null)
+                    _uiState.value = ArticlesState(
+                        articles = articlesResult,
+                        isLoading = false,
+                        error = null)
                 }
             }
         })
     }
+
 }

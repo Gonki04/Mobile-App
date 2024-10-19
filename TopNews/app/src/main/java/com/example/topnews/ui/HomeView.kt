@@ -52,8 +52,7 @@ import com.example.topnews.encodeURL
 @Composable
 fun HomeView(
     modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController()
-) {
+    navController: NavController = rememberNavController()) {
 
     val viewModel : HomeViewModel = viewModel()
     val uiState by viewModel.uiState.collectAsState()
