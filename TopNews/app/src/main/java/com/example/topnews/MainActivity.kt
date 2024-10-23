@@ -38,6 +38,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.topnews.theme.TopNewsTheme
 import com.example.topnews.ui.ArticleDetail
+import com.example.topnews.ui.ForwardView
 import com.example.topnews.ui.HomeView
 import com.example.topnews.ui.RowArticlePreview
 
@@ -90,7 +91,7 @@ class MainActivity : ComponentActivity() {
                                 {
                                     Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                                 }
-                                Button(onClick = { navController.navigate(Screen.ArticleDetail.route) },
+                                Button(onClick = { navController.navigate(Screen.Forward.route) },
                                     colors = ButtonDefaults.buttonColors(Color.LightGray)) {
                                     Icon(Icons.Filled.ArrowForward, contentDescription = "Forward")
                                 }
@@ -115,6 +116,9 @@ class MainActivity : ComponentActivity() {
                                 url = url ?: ""
                             )
                         }
+                        composable(route = Screen.Forward.route) {
+                            ForwardView()
+                        }
                     }
                 }
             }
@@ -125,4 +129,5 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object ArticleDetail : Screen("article_detail/{articleUrl}")
+    object Forward : Screen("forward")
 }
