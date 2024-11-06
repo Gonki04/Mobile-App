@@ -43,6 +43,11 @@ class MainActivity : ComponentActivity() {
                         composable("game_screen") {
                             GameScreenView()
                         }
+                        composable("game_over") {
+                            GameOverView(onPlayClick = {
+                                navController.navigate("game_over")
+                            })
+                        }
                     }
                 }
             }

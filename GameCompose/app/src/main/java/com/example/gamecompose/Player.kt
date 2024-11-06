@@ -23,6 +23,8 @@ class Player {
 
     var detectColision: Rect
 
+    var health: Int = 5
+
     constructor(context: Context, width: Int, height: Int) {
         bitmap = BitmapFactory.decodeResource(context.resources, R.drawable.player)
 
