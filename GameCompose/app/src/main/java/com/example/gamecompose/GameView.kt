@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.RectF
+import android.os.Handler
+import android.os.Looper
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -34,6 +36,7 @@ class GameView : SurfaceView, Runnable {
     private var boostRect: RectF? = null
     private var shootRect: RectF? = null
     var score = 0
+    private var lastBulletTime = 0L
 
     private fun init(context: Context, width: Int, height: Int) {
 
@@ -99,9 +102,6 @@ class GameView : SurfaceView, Runnable {
                 boom.y = e.y
                 e.x = -300
                 player.health--
-                if (player.health == 0) {
-                    onGameOver()
-                }
             }
         }
         player.update()
@@ -159,8 +159,19 @@ class GameView : SurfaceView, Runnable {
         }
     }
 
-    fun control() {
+    var callGameOverOnce = false
+    fun control(){
         Thread.sleep(17)
+        if (player.health == 0 ){
+            playing = false
+            Handler(Looper.getMainLooper()).post {
+                if (!callGameOverOnce) {
+                    onGameOver()
+                    callGameOverOnce = true
+                }
+                gameThread?.join()
+            }
+        }
     }
 
     override fun onSizeChanged(w: Int, h: Int, oldw: Int, oldh: Int) {
@@ -178,10 +189,14 @@ class GameView : SurfaceView, Runnable {
                 if (boostRect!!.contains(event.x, event.y)) {
                     player.boosting = true
                 } else if (shootRect!!.contains(event.x, event.y)) {
-                    val bullet = Bullet(context, width, height)
-                    bullet.x = player.x + player.bitmap.width
-                    bullet.y = player.y + player.bitmap.height / 2
-                    bullets.add(bullet)
+                    val currentTime = System.currentTimeMillis()
+                    if (currentTime - lastBulletTime >= 250) {
+                        val bullet = Bullet(context, width, height)
+                        bullet.x = player.x + player.bitmap.width
+                        bullet.y = player.y + player.bitmap.height / 2
+                        bullets.add(bullet)
+                        lastBulletTime = currentTime
+                    }
                 }
             }
             MotionEvent.ACTION_UP -> {

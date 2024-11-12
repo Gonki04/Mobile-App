@@ -20,7 +20,7 @@ class Bullet(context: Context, screenX: Int, screenY: Int) {
     init {
         val originalBitmap = BitmapFactory.decodeResource(context.resources, R.drawable.bullet1)
         // Redimensionar o bitmap para 50% do tamanho original
-        bitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.width / 2, originalBitmap.height / 2, false)
+        bitmap = Bitmap.createScaledBitmap(originalBitmap, originalBitmap.width / 6, originalBitmap.height / 6, false)
         width = bitmap.width
         height = bitmap.height
         detectCollision = Rect(x, y, bitmap.width, bitmap.height)

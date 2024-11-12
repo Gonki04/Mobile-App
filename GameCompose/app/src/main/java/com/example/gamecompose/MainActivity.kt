@@ -17,6 +17,9 @@ import androidx.core.view.WindowCompat
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.gamecompose.GameHomeView
+import com.example.gamecompose.GameOverView
+import com.example.gamecompose.GameScreenView
 import com.example.gamecompose.ui.theme.GameComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -31,22 +34,21 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             GameComposeTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { _ ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = "game_start"
-                    ) {
-                        composable("game_start") {
+                    NavHost(navController = navController,
+                        startDestination = "game_start"){
+                        composable("game_start"){
                             GameHomeView(onPlayClick = {
                                 navController.navigate("game_screen")
                             })
                         }
-                        composable("game_screen") {
-                            GameScreenView()
-                        }
-                        composable("game_over") {
-                            GameOverView(onPlayClick = {
+                        composable("game_screen"){
+                            GameScreenView() {
                                 navController.navigate("game_over")
-                            })
+                            }
+
+                        }
+                        composable("game_over"){
+                            GameOverView()
                         }
                     }
                 }
