@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun GameScreenView (
-    onGameOver : () -> Unit
+    onGameOver : () -> Unit = {}
 ) {
 
     val configuration = LocalConfiguration.current
@@ -33,7 +33,6 @@ fun GameScreenView (
     ) {
         it.resume()
         it.onGameOver = {
-
             onGameOver()
         }
     }
