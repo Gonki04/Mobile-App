@@ -46,10 +46,26 @@ class LoginViewModel : ViewModel() {
                     state.value = state.value.copy(error = task.exception?.message?: "Unknown error")
                 }
             }
+    }
 
+    fun onRegisterClick(onRegisterSuccess: ()->Unit) {
+        state.value = state.value.copy(isLoading = true)
 
+        val auth: FirebaseAuth = Firebase.auth
 
-
+        auth.createUserWithEmailAndPassword(state.value.email, state.value.password)
+            .addOnCompleteListener{task ->
+                state.value = state.value.copy(isLoading = false)
+                if (task.isSuccessful) {
+                    Log.d(TAG, "createUserWithEmail:success")
+                    val user = auth.currentUser
+                    onRegisterSuccess()
+                }
+                else{
+                    Log.w(TAG, "createUserWithEmail:failure", task.exception)
+                    state.value = state.value.copy(error = task.exception?.message?: "Unknown error")
+                }
+            }
     }
 
 }

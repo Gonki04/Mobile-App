@@ -15,9 +15,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
-import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 const val TAG = "ShoppingList"
 
@@ -37,8 +37,17 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Login.route) {
                             LoginView(
                                 modifier = Modifier.padding(innerPadding),
+                                navController = navController,
                                 onLoginSuccess = {
                                     navController.navigate(Screen.Home.route)
+                                }
+                            )
+                        }
+                        composable(Screen.Register.route) {
+                            RegisterView(
+                                modifier = Modifier.padding(innerPadding),
+                                onRegisterSucess = {
+                                    navController.navigate(Screen.Login.route)
                                 }
                             )
                         }
@@ -66,6 +75,7 @@ class MainActivity : ComponentActivity() {
 
 sealed class Screen (val route:String){
     object Login : Screen("login")
+    object Register : Screen ("register")
     object Home : Screen("home")
     object AddList : Screen("add_list")
 }

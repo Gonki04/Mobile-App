@@ -16,15 +16,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
-fun LoginView(
+fun RegisterView(
     modifier: Modifier = Modifier,
-    onLoginSuccess: () -> Unit = {},
-    navController : NavController = rememberNavController()
+    onRegisterSucess: () -> Unit = {}
 ) {
 
     val viewModel: LoginViewModel = viewModel()
@@ -55,21 +52,12 @@ fun LoginView(
                     Text("password")
                 }
             )
-            Spacer(modifier = Modifier.height(16.dp))
-            Button(
-                onClick = {
-                    viewModel.onLoginClick {
-                        onLoginSuccess()
-                    }
-
-                },
-                content = {
-                    Text("Login")
-                }
-            )
             Spacer(modifier = Modifier.height(2.dp))
             Button(
-                onClick = { navController.navigate("register")
+                onClick = {
+                    viewModel.onRegisterClick {
+                        onRegisterSucess()
+                    }
                 },
                 content = {
                     Text("Register")
@@ -88,8 +76,8 @@ fun LoginView(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginViewPreview() {
+fun RegisterViewPreview() {
     ShoppingListTheme {
-        LoginView()
+        RegisterView()
     }
 }
