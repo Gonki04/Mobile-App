@@ -1,4 +1,4 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.ui.lists
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
 import com.google.firebase.firestore.firestore
+import com.example.shoppinglist.TAG
+import com.example.shoppinglist.models.ListItems
 
 data class AddListState(
     val name : String = "",

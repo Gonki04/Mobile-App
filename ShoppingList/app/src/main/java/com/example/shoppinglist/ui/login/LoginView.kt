@@ -1,6 +1,5 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.ui.login
 
-import android.widget.Space
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -16,12 +15,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
-fun RegisterView(
+fun LoginView(
     modifier: Modifier = Modifier,
-    onRegisterSucess: () -> Unit = {}
+    onLoginSuccess: () -> Unit = {},
+    navController : NavController = rememberNavController()
 ) {
 
     val viewModel: LoginViewModel = viewModel()
@@ -52,12 +54,21 @@ fun RegisterView(
                     Text("password")
                 }
             )
-            Spacer(modifier = Modifier.height(2.dp))
+            Spacer(modifier = Modifier.height(16.dp))
             Button(
                 onClick = {
-                    viewModel.onRegisterClick {
-                        onRegisterSucess()
+                    viewModel.onLoginClick {
+                        onLoginSuccess()
                     }
+
+                },
+                content = {
+                    Text("Login")
+                }
+            )
+            Spacer(modifier = Modifier.height(2.dp))
+            Button(
+                onClick = { navController.navigate("register")
                 },
                 content = {
                     Text("Register")
@@ -76,8 +87,8 @@ fun RegisterView(
 
 @Preview(showBackground = true)
 @Composable
-fun RegisterViewPreview() {
+fun LoginViewPreview() {
     ShoppingListTheme {
-        RegisterView()
+        LoginView()
     }
 }

@@ -1,6 +1,7 @@
-package com.example.shoppinglist
+package com.example.shoppinglist.ui.lists
 
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -15,7 +16,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
@@ -24,6 +24,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.example.shoppinglist.R
+import com.example.shoppinglist.Screen
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
@@ -45,8 +47,14 @@ fun ListListsView(
             ){  index, item ->
 
                 Text(
-                    modifier = Modifier.fillMaxWidth()
-                        .padding(16.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                        .clickable {
+                            navController.navigate(
+                                Screen.ListItems.route.replace("{listId}", item.docId!!)
+                            )
+                        },
                     text = item.name?:"")
 
             }
@@ -69,9 +77,11 @@ fun ListListsView(
             )
         }
     }
+
     LaunchedEffect (key1 = true){
         viewModel.getLists()
     }
+
 }
 
 @Preview(showBackground = true)

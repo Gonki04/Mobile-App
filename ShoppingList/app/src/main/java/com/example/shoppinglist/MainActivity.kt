@@ -1,5 +1,3 @@
-package com.example.shoppinglist
-
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -7,17 +5,19 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.shoppinglist.ui.theme.ShoppingListTheme
 import com.google.firebase.Firebase
 import com.google.firebase.auth.auth
+import com.example.shoppinglist.ui.lists.AddListView
+import com.example.shoppinglist.ui.lists.ListListsView
+import com.example.shoppinglist.ui.lists.items.ListItemsView
+import com.example.shoppinglist.ui.login.LoginView
+import com.example.shoppinglist.ui.login.RegisterView
+import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 const val TAG = "ShoppingList"
 
@@ -37,7 +37,6 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.Login.route) {
                             LoginView(
                                 modifier = Modifier.padding(innerPadding),
-                                navController = navController,
                                 onLoginSuccess = {
                                     navController.navigate(Screen.Home.route)
                                 }
@@ -59,6 +58,13 @@ class MainActivity : ComponentActivity() {
                         composable (Screen.AddList.route){
                             AddListView(navController = navController)
                         }
+                        composable(Screen.ListItems.route) {
+                            val listId = it.arguments?.getString("listId")
+                            ListItemsView(
+                                modifier = Modifier.padding(innerPadding),
+                                listId = listId ?: ""
+                            )
+                        }
                     }
                 }
                 LaunchedEffect(Unit) {
@@ -75,7 +81,8 @@ class MainActivity : ComponentActivity() {
 
 sealed class Screen (val route:String){
     object Login : Screen("login")
-    object Register : Screen ("register")
     object Home : Screen("home")
+    object Register : Screen("register")
     object AddList : Screen("add_list")
+    object ListItems : Screen("list_items/{listId}")
 }
