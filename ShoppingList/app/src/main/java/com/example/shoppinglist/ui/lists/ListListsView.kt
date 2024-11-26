@@ -25,7 +25,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.example.shoppinglist.R
-import com.example.shoppinglist.Screen
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable

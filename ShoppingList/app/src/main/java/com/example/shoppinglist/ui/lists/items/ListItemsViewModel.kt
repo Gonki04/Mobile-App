@@ -1,11 +1,11 @@
 package com.example.shoppinglist.ui.lists.items
 
+import TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
-import com.example.shoppinglist.TAG
 import com.example.shoppinglist.models.Item
 
 data class ListItemsState(
@@ -60,6 +60,21 @@ class ListItemsViewModel : ViewModel(){
             .document(item.docId!!)
             .set(item)
 
+    }
+
+    fun addItem(listId: String, item: Item) {
+        val db = Firebase.firestore
+        db.collection("lists")
+            .document(listId)
+            .collection("items")
+            .add(item)
+            .addOnSuccessListener { documentReference ->
+                Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+            }
+            .addOnFailureListener { e ->
+                Log.w(TAG, "Error adding document", e)
+                // Handle error (e.g., update state with error message)
+            }
     }
 
 

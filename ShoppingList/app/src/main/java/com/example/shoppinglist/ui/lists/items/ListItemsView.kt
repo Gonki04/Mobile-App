@@ -20,10 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.shoppinglist.R
-import com.example.shoppinglist.Screen
-import com.example.shoppinglist.ui.login.RegisterView
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 
@@ -31,7 +30,7 @@ import com.example.shoppinglist.ui.theme.ShoppingListTheme
 fun ListItemsView(
     modifier: Modifier = Modifier,
     listId : String,
-    navController: NavController = rememberNavController()
+    navController: NavHostController
 ){
 
     val viewModel : ListItemsViewModel = viewModel()
@@ -55,36 +54,31 @@ fun ListItemsView(
                 }
             }
         }
-
         Button(
             modifier = Modifier
                 .padding(16.dp)
                 .size(64.dp),
-            onClick = {
-
-            }) {
+            onClick = {navController.navigate("add_item/$listId")}) {
             Image(
                 modifier = Modifier
                     .scale(2.0f)
                     .size(64.dp),
                 colorFilter = ColorFilter.tint(Color.White),
-                painter = painterResource(R.drawable.add_new_list),
+                painter = painterResource(R.drawable.add_item),
                 contentDescription = "add"
             )
         }
     }
-
     LaunchedEffect (key1 = true){
         viewModel.getItems(listId)
     }
-
 }
 
 @Preview(showBackground = true)
 @Composable
 fun ListItemsViewPreview(){
     ShoppingListTheme {
-        ListItemsView(listId = "")
+        ListItemsView(listId = "", navController = rememberNavController())
     }
 }
 

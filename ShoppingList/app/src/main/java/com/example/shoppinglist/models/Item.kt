@@ -6,5 +6,5 @@ class Item (
     var qtd : Double?,
     var checked : Boolean = false) {
 
-    constructor() : this(null,null,null, false)
+    constructor(name: String, qtd: Double, checked: Boolean) : this(null,null,null, false)
 }
