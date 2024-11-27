@@ -1,9 +1,9 @@
 package com.example.shoppinglist.ui.login
 
-import TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.shoppinglist.TAG
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
@@ -48,7 +48,6 @@ class LoginViewModel : ViewModel() {
                 }
             }
     }
-
     fun onRegisterClick(onRegisterSuccess: ()->Unit) {
         state.value = state.value.copy(isLoading = true)
 
@@ -68,5 +67,6 @@ class LoginViewModel : ViewModel() {
                 }
             }
     }
+
 
 }

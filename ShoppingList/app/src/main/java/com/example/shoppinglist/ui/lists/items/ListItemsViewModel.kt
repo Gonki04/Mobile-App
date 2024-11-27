@@ -1,12 +1,13 @@
 package com.example.shoppinglist.ui.lists.items
 
-import TAG
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import com.example.shoppinglist.TAG
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.firestore
 import com.example.shoppinglist.models.Item
+import com.google.firebase.firestore.FirebaseFirestore
 
 data class ListItemsState(
     val items : List<Item> = arrayListOf(),
@@ -77,5 +78,37 @@ class ListItemsViewModel : ViewModel(){
             }
     }
 
-
+    fun deleteItemByNameAndQtd(listId: String, name: String, qtd: Int) {
+        val collectionRef = FirebaseFirestore.getInstance()
+            .collection("lists")
+            .document(listId)
+            .collection("items")
+        collectionRef.whereEqualTo("name", name)
+            .get()
+            .addOnSuccessListener { querySnapshot ->
+                for (document in querySnapshot.documents) {
+                    val currentQtd = document.getLong("qtd")?.toInt() ?: 0
+                    when {
+                        currentQtd > qtd -> {
+                            // Atualizar a quantidade restante
+                            document.reference.update("qtd", currentQtd - qtd)
+                                .addOnSuccessListener {
+                                    Log.d("ListItemsViewModel", "Quantidade atualizada com sucesso.")
+                                }
+                        }
+                        currentQtd == qtd -> {
+                            // Excluir o documento
+                            document.reference.delete()
+                                .addOnSuccessListener {
+                                    Log.d("ListItemsViewModel", "Item removed with success.")
+                                }
+                        }
+                        else -> {
+                            // Quantidade a ser removida é maior que a disponível
+                            Log.w("ListItemsViewModel", "Insufficient quantity to remove.")
+                        }
+                    }
+                }
+            }
+    }
 }

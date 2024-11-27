@@ -1,3 +1,5 @@
+package com.example.shoppinglist
+
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -18,6 +20,7 @@ import com.example.shoppinglist.ui.lists.ListListsView
 import com.example.shoppinglist.ui.lists.items.AddItemView
 import com.example.shoppinglist.ui.lists.items.ListItemsView
 import com.example.shoppinglist.ui.lists.items.ListItemsViewModel
+import com.example.shoppinglist.ui.lists.items.RemoveItemView
 import com.example.shoppinglist.ui.login.LoginView
 import com.example.shoppinglist.ui.login.RegisterView
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
@@ -43,15 +46,17 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.padding(innerPadding),
                                 onLoginSuccess = {
                                     navController.navigate(Screen.Home.route)
-                                }
+                                },
+                                navController = navController
                             )
                         }
                         composable(Screen.Register.route) {
                             RegisterView(
                                 modifier = Modifier.padding(innerPadding),
                                 onRegisterSucess = {
-                                    navController.navigate(Screen.Login.route)
-                                }
+                                    navController.navigate(Screen.Home.route)
+                                },
+                                navController = navController
                             )
                         }
                         composable(Screen.Home.route) {
@@ -63,17 +68,17 @@ class MainActivity : ComponentActivity() {
                             AddListView(navController = navController)
                         }
                         composable(Screen.ListItems.route) {
-                            val listId = it.arguments?.getString("listId") ?: ""
-                            ListItemsView(
-                                modifier = Modifier.padding(innerPadding),
-                                listId = listId,
-                                navController = navController
-                            )
+                            ListItemsView(navController = navController, listId = it.arguments?.getString("listId") ?: "")
                         }
                         composable(Screen.AddItem.route) {
-                            val listId = it.arguments?.getString("listId") ?: ""
                             AddItemView(
-                                listId = listId,
+                                listId = it.arguments?.getString("listId") ?: "",
+                                navController = navController,
+                                viewModel = ListItemsViewModel())
+                        }
+                        composable(Screen.RemoveItem.route) {
+                            RemoveItemView(
+                                listId = it.arguments?.getString("listId") ?: "",
                                 navController = navController,
                                 viewModel = ListItemsViewModel())
                         }
@@ -97,5 +102,6 @@ sealed class Screen (val route:String){
     object Register : Screen("register")
     object AddList : Screen("add_list")
     object AddItem : Screen("add_item/{listId}")
+    object RemoveItem : Screen("remove_item/{listId}")
     object ListItems : Screen("list_items/{listId}")
 }

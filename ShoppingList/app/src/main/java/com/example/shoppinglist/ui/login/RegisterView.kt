@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
@@ -15,9 +16,9 @@ import com.example.shoppinglist.Screen
 import com.example.shoppinglist.ui.theme.ShoppingListTheme
 
 @Composable
-fun LoginView(
+fun RegisterView(
     modifier: Modifier = Modifier,
-    onLoginSuccess: () -> Unit = {},
+    onRegisterSucess: () -> Unit = {},
     navController: NavController
 ) {
     val viewModel: LoginViewModel = viewModel()
@@ -31,9 +32,8 @@ fun LoginView(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(24.dp)
         ) {
-            // Título
             Text(
-                text = "Login",
+                text = "Create Account",
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.padding(bottom = 24.dp)
             )
@@ -63,39 +63,38 @@ fun LoginView(
             )
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botão de Login
+            // Campo de confirmar senha
+            TextField(
+                value = state.password,
+                onValueChange = {
+                    viewModel.onPasswordChange(it)
+                },
+                placeholder = { Text("Confirm Password") },
+                modifier = Modifier.fillMaxWidth(),
+                visualTransformation = PasswordVisualTransformation(),
+                isError = state.error?.contains("confirm") == true
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Botão de registro
             Button(
                 onClick = {
-                    viewModel.onLoginClick {
-                        onLoginSuccess()
+                    viewModel.onRegisterClick {
+                        onRegisterSucess()
+                        navController.navigate(Screen.Login.route)
                     }
                 },
                 modifier = Modifier.fillMaxWidth(),
                 enabled = !state.isLoading
             ) {
-                Text("Login")
+                Text("Register")
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Botão de Registro
-            Button(
-                onClick = {
-                    navController.navigate(Screen.Register.route)
-                },
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text("Create Account")
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Indicador de carregamento
             if (state.isLoading) {
                 CircularProgressIndicator(modifier = Modifier.padding(top = 16.dp))
             }
-
-            // Exibição de erro
             state.error?.let { errorMessage ->
                 Text(
                     text = errorMessage,
@@ -110,8 +109,8 @@ fun LoginView(
 
 @Preview(showBackground = true)
 @Composable
-fun LoginViewPreview() {
+fun RegisterViewPreview() {
     ShoppingListTheme {
-        LoginView(navController = rememberNavController())
+        RegisterView(navController = rememberNavController())
     }
 }

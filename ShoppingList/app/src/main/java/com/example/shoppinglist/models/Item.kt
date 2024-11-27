@@ -1,10 +1,12 @@
 package com.example.shoppinglist.models
 
-class Item (
-    var docId : String?,
-    var name : String?,
-    var qtd : Double?,
-    var checked : Boolean = false) {
-
-    constructor(name: String, qtd: Double, checked: Boolean) : this(null,null,null, false)
+data class Item(
+    var docId: String? = null,
+    var name: String? = null,
+    var qtd: Int? = null,
+    var checked: Boolean = false
+)
+{
+    // Construtor vazio necessário para o Firebase
+    constructor() : this(null, null, null, false)
 }
