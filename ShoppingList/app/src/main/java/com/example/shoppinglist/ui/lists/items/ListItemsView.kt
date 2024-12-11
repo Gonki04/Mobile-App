@@ -51,7 +51,6 @@ fun ListItemsView(
                 }
             }
         }
-
         // Área dos botões
         Row(
             modifier = Modifier
@@ -78,7 +77,7 @@ fun ListItemsView(
                     contentDescription = "Adicionar"
                 )
             }
-            // Botão para excluir
+            // Botão para eliminar
             Button(
                 modifier = Modifier
                     .weight(1f)

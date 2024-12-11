@@ -1,53 +1,46 @@
 package com.example.shoppinglist.ui.lists
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import com.example.shoppinglist.R
-import com.example.shoppinglist.ui.theme.ShoppingListTheme
+import androidx.navigation.NavHostController
 
 @Composable
-fun AddListView(
-    modifier: Modifier = Modifier,
-    navController: NavController = rememberNavController()
+fun RemoveListView(
+    navController: NavHostController,
+    viewModel: RemoveListViewModel
 ) {
-    val viewModel : AddListViewModel = viewModel()
+    var listName by remember { mutableStateOf("") }
     val state = viewModel.state.value
 
     Column(
-        modifier = modifier
+        modifier = Modifier
             .padding(16.dp)
     ) {
         // Título da página
         Text(
-            text = "Add list",
+            text = "Remove List",
             style = MaterialTheme.typography.headlineSmall,
             modifier = Modifier.padding(bottom = 8.dp)
         )
 
         // Descrição
         Text(
-            text = "Name of the list",
+            text = "Enter the name of the list to remove.",
             style = MaterialTheme.typography.bodyMedium,
             color = Color.Gray,
             modifier = Modifier.padding(bottom = 16.dp)
@@ -63,30 +56,21 @@ fun AddListView(
                 .fillMaxWidth()
                 .padding(bottom = 16.dp)
         )
-
-        // Botão de adicionar
+        // Botão de remover
         Button(
             onClick = {
-                viewModel.addList()
+                viewModel.deleteList()
                 navController.popBackStack()
             },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Red,
+                contentColor = Color.White
+            ),
             modifier = Modifier
                 .fillMaxWidth()
-                .height(48.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Green,
-                contentColor = Color.White
-            )
+                .height(48.dp)
         ) {
-            Text(text = "Create list")
+            Text(text = "Remove List")
         }
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun AddListViewPreview(){
-    ShoppingListTheme {
-        AddListView()
     }
 }

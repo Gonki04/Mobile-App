@@ -60,7 +60,6 @@ class ListItemsViewModel : ViewModel(){
             .collection("items")
             .document(item.docId!!)
             .set(item)
-
     }
 
     fun addItem(listId: String, item: Item) {

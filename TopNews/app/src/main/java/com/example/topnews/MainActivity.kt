@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.BottomAppBar
@@ -86,14 +87,18 @@ class MainActivity : ComponentActivity() {
                                 modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceAround
                             ) {
-                                Button(onClick = { navController.navigate(Screen.Home.route)},
-                                    colors = ButtonDefaults.buttonColors(Color.LightGray))
+                                Button(
+                                    onClick = { navController.navigate(Screen.Home.route) },
+                                    colors = ButtonDefaults.buttonColors(Color.LightGray)
+                                )
                                 {
                                     Icon(Icons.Filled.ArrowBack, contentDescription = "Back")
                                 }
-                                Button(onClick = { navController.navigate(Screen.Forward.route) },
-                                    colors = ButtonDefaults.buttonColors(Color.LightGray)) {
-                                    Icon(Icons.Filled.ArrowForward, contentDescription = "Forward")
+                                Button(
+                                    onClick = { navController.navigate(Screen.Favorite.route) },
+                                    colors = ButtonDefaults.buttonColors(Color.LightGray)
+                                ) {
+                                    Icon(Icons.Filled.Favorite, contentDescription = "Favorite")
                                 }
                             }
                         }
@@ -113,10 +118,11 @@ class MainActivity : ComponentActivity() {
                             val url = it.arguments?.getString("articleUrl")
                             ArticleDetail(
                                 modifier = Modifier.padding(innerPadding),
-                                url = url ?: ""
+                                url = url ?: "",
+                                title = "Article"
                             )
                         }
-                        composable(route = Screen.Forward.route) {
+                        composable(route = Screen.Favorite.route) {
                             ForwardView()
                         }
                     }
@@ -129,5 +135,5 @@ class MainActivity : ComponentActivity() {
 sealed class Screen(val route: String) {
     object Home : Screen("home")
     object ArticleDetail : Screen("article_detail/{articleUrl}")
-    object Forward : Screen("forward")
+    object Favorite : Screen("favorite")
 }

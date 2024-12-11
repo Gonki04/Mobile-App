@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,6 +18,7 @@ import androidx.navigation.navArgument
 import com.google.firebase.auth.auth
 import com.example.shoppinglist.ui.lists.AddListView
 import com.example.shoppinglist.ui.lists.ListListsView
+import com.example.shoppinglist.ui.lists.RemoveListView
 import com.example.shoppinglist.ui.lists.items.AddItemView
 import com.example.shoppinglist.ui.lists.items.ListItemsView
 import com.example.shoppinglist.ui.lists.items.ListItemsViewModel
@@ -82,6 +84,13 @@ class MainActivity : ComponentActivity() {
                                 navController = navController,
                                 viewModel = ListItemsViewModel())
                         }
+                        composable(Screen.RemoveList.route) {
+                            RemoveListView(
+                                navController = navController,
+                                viewModel = viewModel()
+                            )
+
+                        }
                     }
                 }
                 LaunchedEffect(Unit) {
@@ -103,5 +112,6 @@ sealed class Screen (val route:String){
     object AddList : Screen("add_list")
     object AddItem : Screen("add_item/{listId}")
     object RemoveItem : Screen("remove_item/{listId}")
+    object RemoveList : Screen("remove_list/{listId}")
     object ListItems : Screen("list_items/{listId}")
 }

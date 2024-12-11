@@ -3,7 +3,9 @@ package com.example.shoppinglist.ui.lists
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -77,27 +79,56 @@ fun ListListsView(
             }
         }
 
-        // Botão de Adicionar Lista
-        Button(
+        Row(
             modifier = Modifier
-                .padding(16.dp)
-                .size(64.dp),
-            onClick = { navController.navigate(Screen.AddList.route) },
-            shape = MaterialTheme.shapes.large,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Green,
-                contentColor = Color.White
-            )
-        ) {
-            Image(
+                .fillMaxWidth()
+                .padding(16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ){
+            // Botão de Adicionar Lista
+            Button(
                 modifier = Modifier
-                    .scale(1.5f)
-                    .size(40.dp),
-                painter = painterResource(R.drawable.add_new_list),
-                contentDescription = "Add new list",
-                colorFilter = ColorFilter.tint(Color.White)
-            )
+                    .padding(16.dp)
+                    .size(64.dp),
+                onClick = { navController.navigate(Screen.AddList.route) },
+                shape = MaterialTheme.shapes.large,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Green,
+                    contentColor = Color.White
+                )
+            ) {
+                Image(
+                    modifier = Modifier
+                        .scale(1.5f)
+                        .size(40.dp),
+                    painter = painterResource(R.drawable.add_new_list),
+                    contentDescription = "Add new list",
+                    colorFilter = ColorFilter.tint(Color.White)
+                )
+            }
+            //Botao remover lista
+            Button(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .size(64.dp),
+                onClick = { navController.navigate(Screen.RemoveList.route) },
+                shape = MaterialTheme.shapes.large,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Red,
+                    contentColor = Color.White
+                )
+            ) {
+                Image(
+                    modifier = Modifier
+                        .scale(1.5f)
+                        .size(40.dp),
+                    painter = painterResource(R.drawable.baseline_delete_24),
+                    contentDescription = "Remove list",
+                    colorFilter = ColorFilter.tint(Color.White)
+                )
+            }
         }
+
     }
 
     LaunchedEffect(key1 = true) {
