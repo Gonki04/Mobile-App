@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.calculator.ui.theme.Components.CalcButton
 import com.example.calculator.ui.theme.Pink40
+import kotlin.math.sqrt
 
 @Composable
 fun CalculatorApp(modifier: Modifier = Modifier) {
@@ -84,8 +85,18 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
             }
             setDisplay(operand)
         }
-        operand = displayText.toDouble()
-        operator = op
+        if (op == "%") {
+            operand = displayText.toDouble() / 100
+            setDisplay(operand)
+            operator = ""
+        } else if (op == "√") {
+            operand = sqrt(displayText.toDouble())
+            setDisplay(operand)
+            operator = ""
+        } else {
+            operand = displayText.toDouble()
+            operator = op
+        }
         userIsInTheMiddleOfIntroducing = false
     }
 
@@ -108,7 +119,7 @@ fun CalculatorApp(modifier: Modifier = Modifier) {
                 .aspectRatio(4f)
         ) {
             CalcButton(modifier = Modifier.weight(1f), label = "AC", onClick = onACPressed)
-            CalcButton(modifier = Modifier.weight(1f), label = "+/-", onClick = onNumPressed)
+            CalcButton(modifier = Modifier.weight(1f), label = "√", onClick = onNumPressed)
             CalcButton(modifier = Modifier.weight(1f), label = "%", onClick = onNumPressed)
             CalcButton(
                 modifier = Modifier.weight(1f),
