@@ -25,35 +25,29 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.topnews.Models.Article
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ArticleDetail(modifier: Modifier = Modifier, url: String, title: String) {
-    val viewModel: FavoriteViewModel = viewModel()
-    val isFavorite = rememberSaveable { mutableStateOf(viewModel.isFavorite(url)) }
-
+fun ArticleDetail(modifier: Modifier, article: Article) {
     Box(modifier = modifier.fillMaxSize()) {
-        Column {
-            AndroidView(
-                modifier = Modifier.padding(top = 56.dp).fillMaxSize(),
-                factory = { context ->
-                    WebView(context).apply {
-                        settings.javaScriptEnabled = true
-                        webViewClient = WebViewClient()
-                        settings.loadWithOverviewMode = true
-                        settings.useWideViewPort = true
-                        settings.setSupportZoom(true)
-                    }
-                },
-                update = { webView ->
-                    webView.loadUrl(url)
-                }
-            )
-        }
+        AndroidView(factory = { context ->
+            WebView(context).apply {
+                settings.javaScriptEnabled = true
+                webViewClient = WebViewClient()
+                settings.loadWithOverviewMode = true
+                settings.useWideViewPort = true
+                settings.setSupportZoom(true)
+            }
+        },
+            update = { webView ->
+                webView.loadUrl(article.url!!)
+            })
     }
 }
 
 @Preview
 @Composable
 fun ArticleDetailPreview() {
-    ArticleDetail(modifier = Modifier, url = "https://www.google.com", title = "Google")
+    ArticleDetail(modifier = Modifier,
+        article = Article(
+            url = "http://google.com"
+        ))
 }

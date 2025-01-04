@@ -1,24 +1,59 @@
 package com.example.topnews.Models
 
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Entity
+import androidx.room.Insert
+import androidx.room.OnConflictStrategy
+import androidx.room.PrimaryKey
+import androidx.room.Query
+import com.example.topnews.encodeURL
 import com.example.topnews.parseDate
+import com.example.topnews.toServerDate
 import org.json.JSONObject
 import java.util.Date
 
+@Entity
 class Article (var title: String? = null,
                var description: String? = null ,
                var urlToImage: String? = null,
-               var url: String? = null,
+               @PrimaryKey
+               var url: String,
                var publishedAt: Date? = null) {
 
     companion object {
         fun fromJson(json: JSONObject): Article {
             return Article(
-                title = json.getString("title"),
-                description = json.getString("description"),
-                urlToImage = json.getString("urlToImage"),
-                url = json.getString("url"),
-                publishedAt = json.getString("publishedAt").parseDate())
+                title       = json.getString("title"        ),
+                description = json.getString("description"  ),
+                urlToImage  = json.getString("urlToImage"   ),
+                url         = json.getString("url"          )?:"no url",
+                publishedAt = json.getString("publishedAt"  ).parseDate())
         }
     }
 
+    fun toJsonString() : String {
+        val jsonObject = JSONObject()
+        jsonObject.put("title"       , title                        )
+        jsonObject.put("description" , description                  )
+        jsonObject.put("urlToImage"  , urlToImage?.encodeURL()      )
+        jsonObject.put("url"         , url?.encodeURL()             )
+        jsonObject.put("publishedAt" , publishedAt?.toServerDate()  )
+        return jsonObject.toString()
+    }
+}
+
+@Dao
+interface ArticleDao {
+    @Query("SELECT * FROM article")
+    fun getAll(): List<Article>
+
+    @Query("SELECT * FROM article WHERE url = :url")
+    fun loadByUrl(url: String): Article
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    fun insert( article: Article)
+
+    @Delete
+    fun delete(article: Article)
 }

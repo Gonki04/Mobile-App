@@ -45,10 +45,15 @@ class MainActivity : ComponentActivity() {
                             GameScreenView() {
                                 navController.navigate("game_over")
                             }
-
                         }
                         composable("game_over"){
-                            GameOverView()
+                            GameOverView(
+                                onRestartClick = {
+                                    navController.navigate("game_screen") {
+                                        popUpTo("game_start") { inclusive = true }
+                                    }
+                                }
+                            )
                         }
                     }
                 }

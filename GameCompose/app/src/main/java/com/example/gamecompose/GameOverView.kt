@@ -22,7 +22,8 @@ import androidx.compose.ui.unit.sp
 @Composable
 fun GameOverView(
     modifier: Modifier = Modifier,
-    onPlayClick: () -> Unit = {}
+    onPlayClick: () -> Unit = {},
+    onRestartClick: () -> Unit = {}
 ) {
     Box(
         modifier = modifier.fillMaxSize(),
@@ -46,6 +47,7 @@ fun GameOverView(
                     .height(80.dp)
                     .clickable {
                         onPlayClick()
+                        onRestartClick()
                     },
                 contentScale = ContentScale.FillBounds
             )

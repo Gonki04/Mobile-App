@@ -8,75 +8,77 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.topnews.Components.BottomBar
-import com.example.topnews.Components.TopBar
+import com.example.topnews.Models.Article
 import com.example.topnews.theme.TopNewsTheme
 import com.example.topnews.ui.ArticleDetail
-import com.example.topnews.ui.FavoriteView
-import com.example.topnews.ui.FavoriteViewModel
-import com.example.topnews.ui.HomeView
+import com.example.topnews.ui.Favorites.FavoritesView
+import com.example.topnews.ui.Home.HomeView
+import dagger.hilt.android.AndroidEntryPoint
+import org.json.JSONObject
+import com.example.topnews.ui.Components.MyBottomBar
+import com.example.topnews.ui.Components.MyTopAppBar
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalMaterial3Api::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            TopNewsTheme {
-                val navController = rememberNavController()
-                val viewModel: FavoriteViewModel = FavoriteViewModel()
-                val currentBackStackEntry = navController.currentBackStackEntryAsState()
-                val currentDestination = currentBackStackEntry.value?.destination?.route
-                val showFavoriteIcon = remember { mutableStateOf(false) }
-                val articleUrl = remember { mutableStateOf<String?>(null) }
-                val articleTitle = remember { mutableStateOf<String?>(null) }
-
-                Scaffold(
-                    modifier = Modifier.fillMaxSize(),
+            var isBaseScreen by remember { mutableStateOf(true) }
+            var article by remember { mutableStateOf<Article?>(null) }
+            var title by remember { mutableStateOf("Daily News") }
+            TopNewsTheme() {
+                var navController = rememberNavController()
+                Scaffold(modifier = Modifier.fillMaxSize(),
                     topBar = {
-                        TopBar(
-                            navController = navController,
-                            showFavoriteIcon = showFavoriteIcon.value,
-                            articleUrl = articleUrl.value,
-                            articleTitle = articleTitle.value,
-                            viewModel = viewModel
-                        )
+                        MyTopAppBar(navController = navController,
+                            title,
+                            isBaseScreen,
+                            article)
                     },
-                    bottomBar = { BottomBar(navController = navController) },
+                    bottomBar = {
+                        MyBottomBar(
+                            navController = navController
+                        )
+                    }
                 ) { innerPadding ->
-                    NavHost(
-                        navController = navController,
-                        startDestination = Screen.Home.route
-                    ) {
+                    NavHost(navController = navController,
+                        startDestination = Screen.Home.route ) {
                         composable(route = Screen.Home.route) {
-                            showFavoriteIcon.value = false
+                            isBaseScreen = true
+                            article = null
+                            title = "Home"
                             HomeView(
                                 navController = navController,
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable(route = Screen.ArticleDetail.route) {
-                            val url = it.arguments?.getString("articleUrl")
-                            showFavoriteIcon.value = true
-                            articleUrl.value = url
-                            articleTitle.value = "Article"
-                            ArticleDetail(
-                                modifier = Modifier.padding(innerPadding),
-                                url = url ?: "",
-                                title = "Article"
+                        composable(route = Screen.Favorites.route) {
+                            isBaseScreen = true
+                            article = null
+                            title = "Favorites"
+                            FavoritesView(
+                                navController = navController,
+                                modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable(route = Screen.Favorite.route) {
-                            showFavoriteIcon.value = false
-                            FavoriteView()
+                        composable(route = Screen.ArticleDetail.route) {
+                            isBaseScreen = false
+                            val articleJsonString = it.arguments?.getString("article")
+                            article = Article.fromJson(JSONObject(articleJsonString!!))
+                            ArticleDetail(
+                                modifier = Modifier.padding(innerPadding),
+                                article = article!!
+                            )
                         }
                     }
                 }
@@ -87,6 +89,7 @@ class MainActivity : ComponentActivity() {
 
 sealed class Screen(val route: String) {
     object Home : Screen("home")
-    object ArticleDetail : Screen("article_detail/{articleUrl}")
-    object Favorite : Screen("favorite")
+    object Favorites : Screen("favorites")
+    object ArticleDetail : Screen("article_detail/{article}")
+
 }
